@@ -30,13 +30,17 @@ def whats_new(session):
     # первый элемент, поэтому используется метод find().
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
 
-    # Шаг 2-й: поиск внутри main_div следующего тега div с классом toctree-wrapper.
+    # Шаг 2-й: поиск внутри main_div
+    # следующего тега div с классом toctree-wrapper.
     # Здесь тоже нужен только первый элемент, используется метод find().
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
 
-    # Шаг 3-й: поиск внутри div_with_ul всех элементов списка li с классом toctree-l1.
+    # Шаг 3-й: поиск внутри div_with_ul
+    # всех элементов списка li с классом toctree-l1.
     # Нужны все теги, поэтому используется метод find_all().
-    sections_by_python = div_with_ul.find_all('li', attrs={'class': 'toctree-l1'})
+    sections_by_python = div_with_ul.find_all(
+        'li', attrs={'class': 'toctree-l1'}
+    )
 
     # Инициализируйте пустой список results.
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
@@ -47,7 +51,8 @@ def whats_new(session):
         # response.encoding = 'utf-8'
         response = get_response(session, version_link)
         if response is None:
-            # Если страница не загрузится, программа перейдёт к следующей ссылке.
+            # Если страница не загрузится,
+            # программа перейдёт к следующей ссылке.
             continue
         soup = BeautifulSoup(response.text, 'lxml')
         h1 = find_tag(soup, 'h1')
@@ -101,7 +106,8 @@ def latest_versions(session):
             version, status = text_match.groups()
         else:
             # Если строка не соответствует паттерну,
-            # первой переменной присваивается весь текст, второй — пустая строка.
+            # первой переменной присваивается весь текст,
+            # второй — пустая строка.
             version, status = a_tag.text, ''
         # Добавление полученных переменных в список в виде кортежа.
         results.append(
@@ -125,7 +131,9 @@ def download(session):
     soup = BeautifulSoup(response.text, features='lxml')
     main_tag = find_tag(soup, 'div', {'role': 'main'})
     table_tag = find_tag(main_tag, 'table', {'class': 'docutils'})
-    pdf_a4_tag = find_tag(table_tag, 'a', {'href': re.compile(r'.+pdf-a4\.zip$')})
+    pdf_a4_tag = find_tag(
+        table_tag, 'a', {'href': re.compile(r'.+pdf-a4\.zip$')}
+    )
     pdf_a4_link = pdf_a4_tag['href']
     archive_url = urljoin(downloads_url, pdf_a4_link)
     print(archive_url)
@@ -180,19 +188,26 @@ def pep(session):
         article = soup.find('article')
         field_list = article.find('dl')
 
-        for dt, dd in zip(field_list.find_all('dt'), field_list.find_all('dd')):
+        for dt, dd in zip(
+            field_list.find_all('dt'), field_list.find_all('dd')
+        ):
             if dt.text.strip() == 'Status:':
                 pep_status = dd.text.strip()
                 break
         status_count[pep_status] += 1
 
         if pep_status not in expected_statuses:
-            mismatched_statuses.append((pep_link, pep_status, expected_statuses))
+            mismatched_statuses.append(
+                (pep_link, pep_status, expected_statuses)
+            )
 
     if mismatched_statuses:
         logging.warning("Несовпадающие статусы:")
         for link, card_status, expected in mismatched_statuses:
-            logging.warning(f"\n{link}\nСтатус в карточке: {card_status}\nОжидаемые статусы: {expected}")
+            logging.warning(
+                f"\n{link}\nСтатус в карточке: {card_status}\n"
+                f"Ожидаемые статусы: {expected}"
+            )
 
     results = [('Статус', 'Количество')]
     for status, count in status_count.items():

@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 from constants import BASE_DIR
 
 
-# Описание формата логов: 
+# Описание формата логов:
 # Время записи – Уровень сообщения – Cообщение.
 LOG_FORMAT = '"%(asctime)s - [%(levelname)s] - %(message)s"'
 # Указываем формат времени.
@@ -37,6 +37,7 @@ def configure_argument_parser(available_modes):
         help='Дополнительные способы вывода данных'
     )
     return parser
+
 
 # Добавьте новую функцию и напишите нужные команды.
 def configure_logging():

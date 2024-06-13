@@ -1,5 +1,11 @@
-# constants.py
 from pathlib import Path
+from enum import Enum
+
+
+class OutputType(str, Enum):
+    PRETTY = 'pretty'
+    FILE = 'file'
+
 
 MAIN_DOC_URL = 'https://docs.python.org/3/'
 BASE_DIR = Path(__file__).parent
@@ -15,3 +21,4 @@ EXPECTED_STATUS = {
     'W': ('Withdrawn',),
     '': ('Draft', 'Active'),
 }
+LXML = 'lxml'

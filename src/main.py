@@ -8,7 +8,9 @@ import requests_cache
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from constants import BASE_DIR, MAIN_DOC_URL, PEPS_URL, EXPECTED_STATUS, LXML, UTF_8
+from constants import (
+    BASE_DIR, MAIN_DOC_URL, PEPS_URL, EXPECTED_STATUS, LXML, UTF_8
+)
 from configs import configure_argument_parser, configure_logging
 from outputs import control_output
 from utils import get_response, find_tag

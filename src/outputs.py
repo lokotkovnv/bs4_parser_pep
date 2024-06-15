@@ -1,4 +1,3 @@
-# outputs.py
 import logging
 import csv
 import datetime as dt
@@ -6,7 +5,7 @@ from typing import List
 from argparse import Namespace
 
 from prettytable import PrettyTable
-from constants import BASE_DIR, DATETIME_FORMAT, OutputType
+from constants import BASE_DIR, DATETIME_FORMAT, OutputType, UTF_8
 
 
 def control_output(results: list, cli_args: Namespace) -> None:
@@ -43,7 +42,7 @@ def file_output(results: List, cli_args: Namespace) -> None:
     now_formatted = now.strftime(DATETIME_FORMAT)
     file_name = f'{parser_mode}_{now_formatted}.csv'
     file_path = results_dir / file_name
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(file_path, 'w', encoding=UTF_8) as f:
         writer = csv.writer(f, dialect='unix')
         writer.writerows(results)
     logging.info(f'Файл с результатами был сохранён: {file_path}')

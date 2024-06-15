@@ -5,6 +5,7 @@ from typing import Optional
 from bs4 import BeautifulSoup
 
 from exceptions import ParserFindTagException
+from constants import UTF_8
 
 
 # Перехват ошибки RequestException.
@@ -13,7 +14,7 @@ def get_response(
 ) -> Optional[requests_cache.CachedResponse]:
     try:
         response = session.get(url)
-        response.encoding = 'utf-8'
+        response.encoding = UTF_8
         return response
     except RequestException:
         logging.exception(

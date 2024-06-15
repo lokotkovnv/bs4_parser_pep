@@ -22,3 +22,4 @@ EXPECTED_STATUS = {
     '': ('Draft', 'Active'),
 }
 LXML = 'lxml'
+UTF_8 = 'utf-8'

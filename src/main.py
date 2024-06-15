@@ -8,7 +8,7 @@ import requests_cache
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from constants import BASE_DIR, MAIN_DOC_URL, PEPS_URL, EXPECTED_STATUS, LXML
+from constants import BASE_DIR, MAIN_DOC_URL, PEPS_URL, EXPECTED_STATUS, LXML, UTF_8
 from configs import configure_argument_parser, configure_logging
 from outputs import control_output
 from utils import get_response, find_tag
@@ -94,7 +94,6 @@ def download(session: requests_cache.CachedSession) -> None:
     )
     pdf_a4_link = pdf_a4_tag['href']
     archive_url = urljoin(downloads_url, pdf_a4_link)
-    print(archive_url)
     filename = archive_url.split('/')[-1]
     downloads_dir = BASE_DIR / 'downloads'
     downloads_dir.mkdir(exist_ok=True)
@@ -111,7 +110,7 @@ def pep(session: requests_cache.CachedSession) -> List:
     mismatched_statuses = []
 
     response = session.get(PEPS_URL)
-    response.encoding = 'utf-8'
+    response.encoding = UTF_8
     soup = BeautifulSoup(response.text, features=LXML)
 
     section = soup.find('section', {'id': 'numerical-index'})
@@ -125,7 +124,7 @@ def pep(session: requests_cache.CachedSession) -> List:
         expected_statuses = EXPECTED_STATUS.get(status_index, [])
 
         if not expected_statuses:
-            logging.warning(f"Неизвестный статус в таблице: {status_index}")
+            logging.warning(f'Неизвестный статус в таблице: {status_index}')
 
         pep_link = cells[1].find('a')['href']
         full_pep_link = urljoin(PEPS_URL, pep_link)
@@ -133,7 +132,7 @@ def pep(session: requests_cache.CachedSession) -> List:
 
     for pep_link, expected_statuses in tqdm(pep_links):
         response = session.get(pep_link)
-        response.encoding = 'utf-8'
+        response.encoding = UTF_8
         soup = BeautifulSoup(response.text, features=LXML)
 
         article = soup.find('article')
@@ -153,11 +152,11 @@ def pep(session: requests_cache.CachedSession) -> List:
             )
 
     if mismatched_statuses:
-        logging.warning("Несовпадающие статусы:")
+        logging.warning('Несовпадающие статусы:')
         for link, card_status, expected in mismatched_statuses:
             logging.warning(
-                f"\n{link}\nСтатус в карточке: {card_status}\n"
-                f"Ожидаемые статусы: {expected}"
+                f'\n{link}\nСтатус в карточке: {card_status}\n'
+                f'Ожидаемые статусы: {expected}'
             )
 
     results = [('Статус', 'Количество')]

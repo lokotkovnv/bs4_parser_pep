@@ -28,7 +28,7 @@ def whats_new(session: requests_cache.CachedSession) -> List:
     sections_by_python = div_with_ul.find_all(
         'li', attrs={'class': 'toctree-l1'}
     )
-    results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
+    results = [('Ссылка на статью', 'Заголовок', 'Редактор, автор')]
     for section in tqdm(sections_by_python):
         version_a_tag = find_tag(section, 'a')
         version_link = urljoin(whats_new_url, version_a_tag['href'])
